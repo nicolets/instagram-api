@@ -11,6 +11,17 @@ async function create(req, res) {
     }
 };
 
+async function getAllUsers(req, res) {
+    const users = await User.find({});
+    res.send(users);
+}
+
+async function isAvailable(req, res) {
+    const {username} = req.body;
+    const isExist = await User.findOne({username})
+    res.send(!isExist)
+}
+
 async function login(req, res) {
     const { username, password } = req.body;
     if (!username || !password) {
@@ -37,5 +48,7 @@ async function deleteUser(req, res) {
 module.exports = {
     create,
     login,
+    getAllUsers,
+    isAvailable,
     deleteUser
 };

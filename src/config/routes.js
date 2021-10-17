@@ -17,6 +17,10 @@ const auth = (req, res, next) => {
 
 router.post('/user', usersController.create);
 
+router.get('/get', usersController.getAllUsers);
+
+router.post('/user/available', usersController.isAvailable);
+
 router.post('/login', usersController.login);
 
 router.get('/health', auth, (req, res) => {
