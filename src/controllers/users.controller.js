@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Post = require('../models/post')
 const jwt = require('jsonwebtoken');
 
 async function create(req, res) {
@@ -38,8 +39,48 @@ async function login(req, res) {
     res.json({ token });
 }
 
+async function me(req, res) {
+    try {
+        const user = await User.findById(req.userId);
+        if (!user) {
+            res.sendStatus(401);
+            return;
+        }
+        res.send(user);
+    } catch (err) {
+        res.sendStatus(500);
+    }
+}
+
+async function getUser(req, res) {
+    try {
+        const { username } = req.params;
+        const user = await User.findOne({ username });
+        if (!user) {
+            res.sendStatus(404);
+        }
+        else {
+            res.send(user);
+        }
+    } catch (err) {
+        res.sendStatus(500);
+    }
+}
+
+async function search(req, res) {
+    const { username } = req.params;
+    console.log(username)
+    try {
+        const users = await User.find({
+            username: new RegExp(username, 'ig')
+        });
+        res.json(users);
+    } catch (e) {
+        res.sendStatus(500);
+    }
+}
+
 async function deleteUser(req, res) {
-    console.log("here");
     console.log(req.params.userId);
     User.findByIdAndRemove({ _id: req.params.userId });
     res.status(200).send();
@@ -50,5 +91,8 @@ module.exports = {
     login,
     getAllUsers,
     isAvailable,
+    me,
+    getUser,
+    search,
     deleteUser
 };
