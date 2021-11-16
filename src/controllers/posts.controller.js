@@ -1,5 +1,7 @@
 const Post = require("../models/post.js");
 const User = require("../models/user.js");
+const Comment = require("../models/comment.js");
+const mongoose = require('mongoose');
 
 async function create(req, res) {
     console.log(req.file);
@@ -25,14 +27,71 @@ async function getAll(req, res) {
 }
 
 async function getPosts(req, res) {
-    const { username } = req.params;
-    const user = await User.findOne({ username });
-    const posts = await Post.find({ author: user._id }).populate('author');
-    res.send(posts);
+    try {
+        const { username } = req.params;
+        const user = await User.findOne({ username });
+        console.log('user', user);
+        const posts = await Post.find({ author: user._id }).populate('author');
+        res.send(posts);
+    } catch(e) {
+        console.log(e, 'error')
+    }
+}
+
+async function like(req, res) {
+    await Post.findByIdAndUpdate(
+        req.params.id,
+        { $addToSet: { likes: mongoose.Types.ObjectId(req.userId) } }
+    );
+    res.sendStatus(200);
+}
+
+async function unlike(req, res) {
+    await Post.findByIdAndUpdate(
+        req.params.id,
+        { $pull: { likes: mongoose.Types.ObjectId(req.userId) } }
+    );
+    res.sendStatus(200);
+}
+
+async function getOne(req, res) {
+    const { id } = req.params;
+    const post = await Post.findById(id).populate('author');
+    res.json(post);
+}
+
+async function createComment(req, res) {
+    const comment = new Comment({
+        author: req.userId,
+        post: req.params.id,
+        content: req.body.content
+    });
+    try {
+        const createdComment = await comment.save();
+        res.json(createdComment);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(400);
+    }
+}
+
+async function getComments(req, res) {
+    const { id } = req.params;
+    try {
+        const comments = await Comment.find({ post: id });
+        res.json(comments);
+    } catch(e) {
+        res.sendStatus(500);
+    }
 }
 
 module.exports = {
     create,
     getAll,
-    getPosts
+    getPosts,
+    like,
+    unlike,
+    getOne,
+    createComment,
+    getComments
 }

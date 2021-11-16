@@ -32,9 +32,14 @@ const auth = (req, res, next) => {
 
 router.get('/user/me', auth, usersController.me);
 
+router.get('/post/:username', auth, postsController.getPosts);
+router.post('/post/:id/like', auth, postsController.like);
+router.post('/post/:id/unlike', auth, postsController.unlike);
+router.post('/post/:id/comment', auth, postsController.createComment);
+router.get('/post/:id/comment', auth, postsController.getComments);
+router.get('/post/:id', auth, postsController.getOne);
 router.post('/post', auth, upload.single('image'), postsController.create);
 router.get('/post', postsController.getAll);
-router.get('/post/:username', auth, postsController.getPosts);
 
 router.get('/get', usersController.getAllUsers);
 
@@ -42,7 +47,8 @@ router.post('/user', usersController.create);
 router.get('/user/:username', auth, usersController.getUser);
 router.get('/search/user/:username', auth, usersController.search);
 router.post('/user/available', usersController.isAvailable);
-
+router.post('/user/:username/follow', auth, usersController.follow);
+router.post('/user/:username/unfollow', auth, usersController.unfollow);
 
 router.post('/login', usersController.login);
 router.get('/health', (req, res) => {
