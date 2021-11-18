@@ -19,7 +19,6 @@ const upload = multer({ storage });
 
 const auth = (req, res, next) => {
     const token = req.headers['authorization'];
-    console.log(token);
     try {
         const user = jwt.verify(token, 'shahar');
         req.userId = user.id;
@@ -32,7 +31,6 @@ const auth = (req, res, next) => {
 
 router.get('/user/me', auth, usersController.me);
 
-router.get('/post/:username', auth, postsController.getPosts);
 router.post('/post/:id/like', auth, postsController.like);
 router.post('/post/:id/unlike', auth, postsController.unlike);
 router.post('/post/:id/comment', auth, postsController.createComment);
@@ -41,9 +39,11 @@ router.get('/post/:id', auth, postsController.getOne);
 router.post('/post', auth, upload.single('image'), postsController.create);
 router.get('/post', postsController.getAll);
 
+
 router.get('/get', usersController.getAllUsers);
 
 router.post('/user', usersController.create);
+router.get('/user/:username/post', auth, postsController.getPosts);
 router.get('/user/:username', auth, usersController.getUser);
 router.get('/search/user/:username', auth, usersController.search);
 router.post('/user/available', usersController.isAvailable);
@@ -52,7 +52,6 @@ router.post('/user/:username/unfollow', auth, usersController.unfollow);
 
 router.post('/login', usersController.login);
 router.get('/health', (req, res) => {
-    console.log(req.body);
     res.sendStatus(200);
 });
 router.delete('/user/:userId', usersController.deleteUser)

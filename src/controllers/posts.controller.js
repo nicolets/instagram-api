@@ -4,7 +4,6 @@ const Comment = require("../models/comment.js");
 const mongoose = require('mongoose');
 
 async function create(req, res) {
-    console.log(req.file);
     const { body } = req.body;
     const tempPost = {
         body,
@@ -30,7 +29,6 @@ async function getPosts(req, res) {
     try {
         const { username } = req.params;
         const user = await User.findOne({ username });
-        console.log('user', user);
         const posts = await Post.find({ author: user._id }).populate('author');
         res.send(posts);
     } catch(e) {
@@ -67,7 +65,8 @@ async function createComment(req, res) {
         content: req.body.content
     });
     try {
-        const createdComment = await comment.save();
+        let createdComment = await comment.save();
+        createdComment = await Comment.findById(createdComment._id).populate('author')
         res.json(createdComment);
     } catch (e) {
         console.log(e);
@@ -78,7 +77,7 @@ async function createComment(req, res) {
 async function getComments(req, res) {
     const { id } = req.params;
     try {
-        const comments = await Comment.find({ post: id });
+        const comments = await Comment.find({ post: id }).populate('author');
         res.json(comments);
     } catch(e) {
         res.sendStatus(500);

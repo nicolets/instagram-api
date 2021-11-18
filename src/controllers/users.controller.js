@@ -38,9 +38,9 @@ async function login(req, res) {
     if(!userExist) {
         res.status(403).send({message: 'One of the parameters is incorrect'});
     }
-    console.log(userExist._id);
+  
     const token = jwt.sign({ id: userExist._id }, 'shahar');
-    console.log(token);
+
 
     res.json({ token });
 }
@@ -75,7 +75,6 @@ async function getUser(req, res) {
 
 async function search(req, res) {
     const { username } = req.params;
-    console.log(username)
     try {
         const users = await User.find({
             username: new RegExp(username, 'ig') 
@@ -127,7 +126,6 @@ async function unfollow(req, res) {
 }
 
 async function deleteUser(req, res) {
-    console.log(req.params.userId);
     User.findByIdAndRemove({ _id: req.params.userId });
     res.status(200).send();
 }
