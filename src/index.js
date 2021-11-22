@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(routes);
 
 console.log(env.mongoUrl);
-mongoose.connect(env.mongoUrl)
+mongoose.connect(env.mongoUrl, { useNewUrlParser: true })
     .then(listen)
     .catch(err => console.error(err));
 
