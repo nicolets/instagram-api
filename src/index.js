@@ -11,9 +11,7 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(routes);
 
-mongoose.connect(env.mongoUrl, {
-    autoIndex: true, //make this also true
-})
+mongoose.connect(env.mongoUrl)
     .then(listen)
     .catch(err => console.error(err));
 
