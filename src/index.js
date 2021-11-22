@@ -11,6 +11,7 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(routes);
 
+console.log(env.mongoUrl);
 mongoose.connect(env.mongoUrl)
     .then(listen)
     .catch(err => console.error(err));
