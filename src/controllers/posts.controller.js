@@ -84,6 +84,16 @@ async function getComments(req, res) {
     }
 }
 
+async function deletePost(req, res) {
+    const { id } = req.params;
+    try {
+        await Post.findOneAndDelete({ _id: id });
+        res.status(200).send();
+    } catch(e) {
+        res.sendStatus(500);
+    }
+}
+
 module.exports = {
     create,
     getAll,
@@ -92,5 +102,6 @@ module.exports = {
     unlike,
     getOne,
     createComment,
-    getComments
+    getComments,
+    deletePost
 }

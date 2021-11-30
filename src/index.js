@@ -11,8 +11,8 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(routes);
 
-console.log(env.mongoUrl);
-mongoose.connect(env.mongoUrl, { useNewUrlParser: true })
+
+mongoose.connect(env.mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true  })
     .then(listen)
     .catch(err => console.error(err));
 

@@ -38,10 +38,7 @@ async function login(req, res) {
     if(!userExist) {
         res.status(403).send({message: 'One of the parameters is incorrect'});
     }
-  
     const token = jwt.sign({ id: userExist._id }, 'shahar');
-
-
     res.json({ token });
 }
 
