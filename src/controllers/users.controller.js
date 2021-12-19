@@ -122,10 +122,20 @@ async function unfollow(req, res) {
     }
 }
 
+async function updateProfilePic(req, res) {
+    console.log(req)
+    const user = User.findOne({ _id: req.params.userId })
+    const image = req.file.filename
+    user.profilePic = image
+    
+    await user.save()
+}
+
 async function deleteUser(req, res) {
     User.findByIdAndRemove({ _id: req.params.userId });
     res.status(200).send();
 }
+
 
 module.exports = {
     create,
@@ -137,5 +147,6 @@ module.exports = {
     search,
     follow,
     unfollow,
+    updateProfilePic,
     deleteUser
 };

@@ -51,11 +51,11 @@ router.get('/search/user/:username', auth, usersController.search);
 router.post('/user/available', usersController.isAvailable);
 router.post('/user/:username/follow', auth, usersController.follow);
 router.post('/user/:username/unfollow', auth, usersController.unfollow);
-
+router.post('/user/:userId/updateProfileImage', auth, upload.single('profilePic'), usersController.updateProfilePic)
 router.post('/login', usersController.login);
 router.get('/health', (req, res) => {
     res.sendStatus(200);
 });
-router.delete('/user/:userId', usersController.deleteUser)
+router.delete('/user/:userId', auth, usersController.deleteUser)
 
 module.exports = router;

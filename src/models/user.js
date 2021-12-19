@@ -23,6 +23,9 @@ const userSchema = new mongoose.Schema({
     following: {
         type: Array,
         default: []
+    },
+    profilePic: {
+        type: String
     }
 });
 
